@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping Discount System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .product-price {
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .quantity-btn:hover {
+            background: #2980b9;
+        }
+
+        .quantity-input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+        }
+
+        .add-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #229954;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .payment-option:hover {
+            background: #f1f2f6;
+        }
+
+        .payment-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .delivery-option {
+            margin: 15px 0;
+        }
+
+        .delivery-option label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-top: 20px;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .checkout-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .bill-section {
+            grid-column: span 2;
+            background: #2c3e50;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .bill-section h2 {
+            color: white;
+            border-bottom-color: #3498db;
+        }
+
+        .bill-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .bill-row.total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-bottom: 3px solid #3498db;
+            margin-top: 10px;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1b0b7;
+        }
+
+        .empty-cart {
+            text-align: center;
+            color: #6c757d;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .bill-section {
+                grid-column: span 1;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .product-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛒 ShopSmart</h1>
+            <p>Online Shopping with Smart Discounts</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Available Products Section -->
+            <div class="section">
+                <h2>📱 Available Products</h2>
+                <div id="products-container">
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">Smartphone</div>
+                            <div class="product-price">₹15,000</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('smartphone', -1)">-</button>
+                            <input type="number" class="quantity-input" id="smartphone-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('smartphone', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('Smartphone', 15000, 'smartphone-qty')">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">Laptop</div>
+                            <div class="product-price">₹45,000</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('laptop', -1)">-</button>
+                            <input type="number" class="quantity-input" id="laptop-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('laptop', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('Laptop', 45000, 'laptop-qty')">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">Headphones</div>
+                            <div class="product-price">₹2,500</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('headphones', -1)">-</button>
+                            <input type="number" class="quantity-input" id="headphones-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('headphones', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('Headphones', 2500, 'headphones-qty')">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">Mouse</div>
+                            <div class="product-price">₹800</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('mouse', -1)">-</button>
+                            <input type="number" class="quantity-input" id="mouse-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('mouse', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('Mouse', 800, 'mouse-qty')">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">T-Shirt</div>
+                            <div class="product-price">₹500</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('tshirt', -1)">-</button>
+                            <input type="number" class="quantity-input" id="tshirt-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('tshirt', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('T-Shirt', 500, 'tshirt-qty')">Add</button>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-info">
+                            <div class="product-name">Book</div>
+                            <div class="product-price">₹300</div>
+                        </div>
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('book', -1)">-</button>
+                            <input type="number" class="quantity-input" id="book-qty" value="1" min="1">
+                            <button class="quantity-btn" onclick="updateQuantity('book', 1)">+</button>
+                            <button class="add-btn" onclick="addToCart('Book', 300, 'book-qty')">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shopping Cart Section -->
+            <div class="section">
+                <h2>🛍️ Shopping Cart</h2>
+                <div id="cart-container">
+                    <div class="empty-cart">
+                        Your cart is empty. Add some products!
+                    </div>
+                </div>
+
+                <!-- Payment Options -->
+                <h2 style="margin-top: 30px;">💳 Payment Method</h2>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="1" checked>
+                        <span>💰 UPI Payment</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="2">
+                        <span>💳 Credit Card</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment" value="3">
+                        <span>💵 Cash on Delivery (COD)</span>
+                    </label>
+                </div>
+
+                <!-- Delivery Options -->
+                <div class="delivery-option">
+                    <label>
+                        <input type="checkbox" id="within-city" checked>
+                        <span>📍 Delivery within city limits</span>
+                    </label>
+                </div>
+
+                <button class="checkout-btn" onclick="processCheckout()" disabled>
+                    🚀 Proceed to Checkout
+                </button>
+            </div>
+
+            <!-- Bill Section -->
+            <div class="section bill-section" id="bill-section" style="display: none;">
+                <h2>🧾 Final Bill</h2>
+                <div id="bill-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ShoppingCart {
+            constructor() {
+                this.items = [];
+                this.cartTotal = 0;
+                this.shippingCharge = 0;
+                this.discountPercent = 0;
+                this.discountAmount = 0;
+                this.finalAmount = 0;
+                this.paymentMethod = '';
+                this.isWithinCity = true;
+            }
+
+            addItem(name, price, quantity) {
+                // Check if item already exists
+                const existingItem = this.items.find(item => item.name === name);
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    this.items.push({ name, price, quantity });
+                }
+                this.updateCart();
+            }
+
+            removeItem(index) {
+                this.items.splice(index, 1);
+                this.updateCart();
+            }
+
+            calculateCartTotal() {
+                this.cartTotal = this.items.reduce((total, item) => {
+                    return total + (item.price * item.quantity);
+                }, 0);
+            }
+
+            updateCart() {
+                this.calculateCartTotal();
+                this.displayCart();
+                this.updateCheckoutButton();
+            }
+
+            displayCart() {
+                const cartContainer = document.getElementById('cart-container');
+                
+                // 1. if - Check if cart has at least 1 item
+                if (this.items.length >= 1) {
+                    let cartHTML = '';
+                    this.items.forEach((item, index) => {
+                        cartHTML += `
+                            <div class="cart-item">
+                                <div>
+                                    <div style="font-weight: bold;">${item.name}</div>
+                                    <div style="color: #e74c3c;">₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}</div>
+                                </div>
+                                <button class="remove-btn" onclick="cart.removeItem(${index})">Remove</button>
+                            </div>
+                        `;
+                    });
+                    
+                    cartHTML += `
+                        <div style="text-align: center; margin-top: 15px; font-weight: bold; font-size: 1.2rem; color: #2c3e50;">
+                            Cart Total: ₹${this.cartTotal}
+                        </div>
+                    `;
+                    
+                    cartContainer.innerHTML = cartHTML;
+                } else {
+                    cartContainer.innerHTML = '<div class="empty-cart">Your cart is empty. Add some products!</div>';
+                }
+            }
+
+            updateCheckoutButton() {
+                const checkoutBtn = document.querySelector('.checkout-btn');
+                if (this.items.length >= 1) {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = '🚀 Proceed to Checkout';
+                } else {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.textContent = 'Add items to checkout';
+                }
+            }
+
+            // 2. if...else - Calculate shipping charges
+            calculateShipping() {
+                if (this.cartTotal >= 500) {
+                    this.shippingCharge = 0;
+                    return "✅ Free shipping (Cart total ≥ ₹500)";
+                } else {
+                    this.shippingCharge = 50;
+                    return "📦 Shipping charge: ₹50 (Cart total < ₹500)";
+                }
+            }
+
+            // 3. if...else if...else - Apply discount based on cart total
+            applyDiscount() {
+                if (this.cartTotal >= 2000) {
+                    this.discountPercent = 20;
+                    return "🎉 20% discount applied! (Cart total ≥ ₹2000)";
+                } else if (this.cartTotal >= 1000) {
+                    this.discountPercent = 10;
+                    return "🎊 10% discount applied! (Cart total ≥ ₹1000)";
+                } else if (this.cartTotal >= 500) {
+                    this.discountPercent = 5;
+                    return "✨ 5% discount applied! (Cart total ≥ ₹500)";
+                } else {
+                    this.discountPercent = 0;
+                    return "No discount available (Cart total < ₹500)";
+                }
+            }
+
+            // 4. switch - Payment method selection
+            getPaymentMethod(choice) {
+                switch (parseInt(choice)) {
+                    case 1:
+                        this.paymentMethod = 'UPI';
+                        return "💰 UPI Payment";
+                    case 2:
+                        this.paymentMethod = 'Credit Card';
+                        return "💳 Credit Card";
+                    case 3:
+                        this.paymentMethod = 'COD';
+                        return "💵 Cash on Delivery";
+                    default:
+                        this.paymentMethod = 'UPI';
+                        return "💰 UPI Payment (Default)";
+                }
+            }
+
+            // 5. ternary - Check cashback eligibility
+            checkCashbackEligibility() {
+                const isDigitalPayment = (this.paymentMethod === 'UPI' || this.paymentMethod === 'Credit Card');
+                return isDigitalPayment ? "✅ Eligible for cashback" : "❌ Not eligible for cashback";
+            }
+
+            // 6. logical operators - COD eligibility check
+            checkCODEligibility() {
+                this.finalAmount = this.cartTotal - this.discountAmount + this.shippingCharge;
+                
+                // Using logical AND operator
+                const codEligible = (this.finalAmount <= 3000) && (this.isWithinCity);
+                
+                if (this.paymentMethod === 'COD') {
+                    if (codEligible) {
+                        return {
+                            eligible: true,
+                            message: "✅ COD is available (Amount ≤ ₹3000 AND delivery within city)"
+                        };
+                    } else {
+                        let reasons = [];
+                        if (this.finalAmount > 3000) {
+                            reasons.push("Amount exceeds ₹3000");
+                        }
+                        if (!this.isWithinCity) {
+                            reasons.push("Delivery outside city limits");
+                        }
+                        
+                        // Auto-switch to UPI if COD not eligible
+                        this.paymentMethod = 'UPI';
+                        document.querySelector('input[name="payment"][value="1"]').checked = true;
+                        
+                        return {
+                            eligible: false,
+                            message: `❌ COD not available. Reasons: ${reasons.join(', ')}. Payment method changed to UPI.`
+                        };
+                    }
+                }
+                return { eligible: true, message: "" };
+            }
+
+            processCheckout() {
+                // Get payment method
+                const paymentChoice = document.querySelector('input[name="payment"]:checked').value;
+                this.isWithinCity = document.getElementById('within-city').checked;
+                
+                // Calculate all values
+                this.calculateCartTotal();
+                const shippingMessage = this.calculateShipping();
+                const discountMessage = this.applyDiscount();
+                this.discountAmount = (this.cartTotal * this.discountPercent) / 100;
+                const paymentMessage = this.getPaymentMethod(paymentChoice);
+                const codCheck = this.checkCODEligibility();
+                const cashbackMessage = this.checkCashbackEligibility();
+                
+                // Display bill
+                this.displayBill(shippingMessage, discountMessage, paymentMessage, codCheck, cashbackMessage);
+            }
+
+            displayBill(shippingMessage, discountMessage, paymentMessage, codCheck, cashbackMessage) {
+                const billSection = document.getElementById('bill-section');
+                const billDetails = document.getElementById('bill-details');
+                
+                let statusMessages = `
+                    <div class="status-message success">${shippingMessage}</div>
+                    <div class="status-message success">${discountMessage}</div>
+                    <div class="status-message ${codCheck.eligible ? 'success' : 'warning'}">${codCheck.message}</div>
+                    <div class="status-message success">Payment Method: ${paymentMessage}</div>
+                    <div class="status-message ${this.paymentMethod !== 'COD' ? 'success' : 'warning'}">${cashbackMessage}</div>
+                `;
+
+                let billHTML = `
+                    ${statusMessages}
+                    <div style="margin-top: 20px;">
+                        <div class="bill-row">
+                            <span>Cart Total:</span>
+                            <span>₹${this.cartTotal}</span>
+                        </div>
+                        ${this.discountAmount > 0 ? `
+                            <div class="bill-row">
+                                <span>Discount (${this.discountPercent}%):</span>
+                                <span style="color: #27ae60;">-₹${this.discountAmount}</span>
+                            </div>
+                        ` : ''}
+                        <div class="bill-row">
+                            <span>Shipping Charges:</span>
+                            <span>₹${this.shippingCharge}</span>
+                        </div>
+                        <div class="bill-row total">
+                            <span>Final Amount:</span>
+                            <span>₹${this.finalAmount}</span>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(52, 152, 219, 0.1); border-radius: 10px;">
+                            <h3 style="color: #3498db; margin-bottom: 10px;">🎉 Order Confirmed!</h3>
+                            <p style="color: #2c3e50;">Thank you for shopping with ShopSmart!</p>
+                            <p style="color: #7f8c8d; margin-top: 10px;">Payment Method: ${this.paymentMethod}</p>
+                        </div>
+                    </div>
+                `;
+
+                billDetails.innerHTML = billHTML;
+                billSection.style.display = 'block';
+                billSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Initialize cart
+        const cart = new ShoppingCart();
+
+        // Utility functions
+        function updateQuantity(productId, change) {
+            const input = document.getElementById(productId + '-qty');
+            let currentValue = parseInt(input.value);
+            currentValue = Math.max(1, currentValue + change);
+            input.value = currentValue;
+        }
+
+        function addToCart(name, price, qtyInputId) {
+            const quantity = parseInt(document.getElementById(qtyInputId).value);
+            cart.addItem(name, price, quantity);
+            
+            // Reset quantity to 1
+            document.getElementById(qtyInputId).value = 1;
+            
+            // Show success message
+            showNotification(`${name} added to cart!`, 'success');
+        }
+
+        function processCheckout() {
+            // 1. if - Check if cart has items before proceeding
+            if (cart.items.length >= 1) {
+                cart.processCheckout();
+            } else {
+                showNotification('Please add items to cart before checkout!', 'error');
+            }
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `status-message ${type}`;
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '1000';
+            notification.style.minWidth = '300px';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize with sample items (for demonstration)
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can add sample items here if needed
+            console.log('Shopping Cart System Loaded!');
+            console.log('All conditional statements implemented:');
+            console.log('1. if - Cart validation');
+            console.log('2. if...else - Shipping calculation');
+            console.log('3. if...else if...else - Discount tiers');
+            console.log('4. switch - Payment method selection');
+            console.log('5. ternary - Cashback eligibility');
+            console.log('6. logical operators - COD eligibility (amount <= 3000 AND within city)');
+        });
+    </script>
+</body>
+</html>
