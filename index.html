@@ -4,738 +4,642 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Shopping Discount System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .shopping-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             overflow: hidden;
+            max-width: 500px;
+            margin: 0 auto;
         }
-
-        .header {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
+        .shopping-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
             text-align: center;
-            padding: 30px;
         }
-
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            padding: 30px;
-        }
-
-        .section {
-            background: #f8f9fa;
-            border-radius: 10px;
+        .shopping-body {
+            background: white;
             padding: 25px;
-            border: 2px solid #e9ecef;
+            min-height: 400px;
         }
-
-        .section h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
+        .product-item {
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
         }
-
-        .product-card {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .product-item:hover {
+            transform: translateX(5px);
+            border-left-color: #764ba2;
         }
-
-        .product-info {
-            display: flex;
-            flex-direction: column;
+        .summary-item {
+            border-bottom: 1px dashed #e2e8f0;
+            padding: 10px 0;
         }
-
-        .product-name {
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .product-price {
-            color: #e74c3c;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .quantity-btn {
-            background: #3498db;
+        .discount-badge {
+            background: linear-gradient(to right, #f093fb 0%, #f5576c 100%);
             color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
         }
-
-        .quantity-btn:hover {
-            background: #2980b9;
-        }
-
-        .quantity-input {
-            width: 50px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 5px;
-        }
-
-        .add-btn {
-            background: #27ae60;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        .add-btn:hover {
-            background: #229954;
-        }
-
-        .cart-item {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .remove-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .remove-btn:hover {
-            background: #c0392b;
-        }
-
-        .payment-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
         .payment-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: white;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .payment-option:hover {
-            background: #f1f2f6;
-        }
-
-        .payment-option input[type="radio"] {
-            margin: 0;
-        }
-
-        .delivery-option {
-            margin: 15px 0;
-        }
-
-        .delivery-option label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            border: none;
+            border: 2px solid #e2e8f0;
             border-radius: 10px;
             padding: 15px;
-            font-size: 1.2rem;
-            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.3s;
-            margin-top: 20px;
+            transition: all 0.3s;
         }
-
-        .checkout-btn:hover {
-            transform: translateY(-2px);
+        .payment-option.selected {
+            border-color: #667eea;
+            background-color: #f0f4ff;
         }
-
-        .checkout-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .bill-section {
-            grid-column: span 2;
-            background: #2c3e50;
-            color: white;
-            margin-top: 20px;
-        }
-
-        .bill-section h2 {
-            color: white;
-            border-bottom-color: #3498db;
-        }
-
-        .bill-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #34495e;
-        }
-
-        .bill-row.total {
-            font-weight: bold;
-            font-size: 1.2rem;
-            border-bottom: 3px solid #3498db;
-            margin-top: 10px;
-        }
-
-        .status-message {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 10px 0;
+        .cashback-eligible {
+            color: #10b981;
             font-weight: bold;
         }
-
-        .success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .cashback-not-eligible {
+            color: #ef4444;
+            font-weight: bold;
         }
-
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
+        .pulse {
+            animation: pulse 2s infinite;
         }
-
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f1b0b7;
-        }
-
-        .empty-cart {
-            text-align: center;
-            color: #6c757d;
-            padding: 40px;
-            font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .bill-section {
-                grid-column: span 1;
-            }
-
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .product-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🛒 ShopSmart</h1>
-            <p>Online Shopping with Smart Discounts</p>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="shopping-card w-full">
+        <div class="shopping-header">
+            <h1 class="text-3xl font-bold text-white">ShopEasy</h1>
+            <p class="text-white opacity-80">Smart discounts & shipping calculator</p>
         </div>
-
-        <div class="main-content">
-            <!-- Available Products Section -->
-            <div class="section">
-                <h2>📱 Available Products</h2>
-                <div id="products-container">
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">Smartphone</div>
-                            <div class="product-price">₹15,000</div>
+        
+        <div class="shopping-body">
+            <!-- Product Selection Section -->
+            <div id="product-selection">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Select Products</h2>
+                
+                <div class="space-y-4 mb-6">
+                    <div class="product-item bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Wireless Headphones</h3>
+                            <p class="text-gray-600 text-sm">High-quality sound with noise cancellation</p>
                         </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('smartphone', -1)">-</button>
-                            <input type="number" class="quantity-input" id="smartphone-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('smartphone', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('Smartphone', 15000, 'smartphone-qty')">Add</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">Laptop</div>
-                            <div class="product-price">₹45,000</div>
-                        </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('laptop', -1)">-</button>
-                            <input type="number" class="quantity-input" id="laptop-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('laptop', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('Laptop', 45000, 'laptop-qty')">Add</button>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-purple-600">₹1,299</span>
+                            <button class="add-to-cart bg-purple-500 text-white p-2 rounded-full" data-product="Headphones" data-price="1299">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">Headphones</div>
-                            <div class="product-price">₹2,500</div>
+                    
+                    <div class="product-item bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Smart Watch</h3>
+                            <p class="text-gray-600 text-sm">Track your fitness and notifications</p>
                         </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('headphones', -1)">-</button>
-                            <input type="number" class="quantity-input" id="headphones-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('headphones', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('Headphones', 2500, 'headphones-qty')">Add</button>
-                        </div>
-                    </div>
-
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">Mouse</div>
-                            <div class="product-price">₹800</div>
-                        </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('mouse', -1)">-</button>
-                            <input type="number" class="quantity-input" id="mouse-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('mouse', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('Mouse', 800, 'mouse-qty')">Add</button>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-purple-600">₹2,499</span>
+                            <button class="add-to-cart bg-purple-500 text-white p-2 rounded-full" data-product="Smart Watch" data-price="2499">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">T-Shirt</div>
-                            <div class="product-price">₹500</div>
+                    
+                    <div class="product-item bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Bluetooth Speaker</h3>
+                            <p class="text-gray-600 text-sm">Portable speaker with 10hr battery</p>
                         </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('tshirt', -1)">-</button>
-                            <input type="number" class="quantity-input" id="tshirt-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('tshirt', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('T-Shirt', 500, 'tshirt-qty')">Add</button>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-purple-600">₹899</span>
+                            <button class="add-to-cart bg-purple-500 text-white p-2 rounded-full" data-product="Bluetooth Speaker" data-price="899">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <div class="product-card">
-                        <div class="product-info">
-                            <div class="product-name">Book</div>
-                            <div class="product-price">₹300</div>
+                    
+                    <div class="product-item bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <h3 class="font-semibold">Phone Case</h3>
+                            <p class="text-gray-600 text-sm">Protective case for your smartphone</p>
                         </div>
-                        <div class="quantity-controls">
-                            <button class="quantity-btn" onclick="updateQuantity('book', -1)">-</button>
-                            <input type="number" class="quantity-input" id="book-qty" value="1" min="1">
-                            <button class="quantity-btn" onclick="updateQuantity('book', 1)">+</button>
-                            <button class="add-btn" onclick="addToCart('Book', 300, 'book-qty')">Add</button>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-purple-600">₹399</span>
+                            <button class="add-to-cart bg-purple-500 text-white p-2 rounded-full" data-product="Phone Case" data-price="399">
+                                <i class="fas fa-plus"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Shopping Cart Section -->
-            <div class="section">
-                <h2>🛍️ Shopping Cart</h2>
-                <div id="cart-container">
-                    <div class="empty-cart">
+                
+                <div class="bg-purple-50 p-4 rounded-lg mb-4">
+                    <h3 class="font-semibold text-purple-800 mb-2">Your Cart</h3>
+                    <div id="cart-items" class="text-sm text-gray-700">
+                        <!-- Cart items will be displayed here -->
+                    </div>
+                    <div id="empty-cart-message" class="text-gray-500 text-center py-2">
                         Your cart is empty. Add some products!
                     </div>
                 </div>
-
-                <!-- Payment Options -->
-                <h2 style="margin-top: 30px;">💳 Payment Method</h2>
-                <div class="payment-options">
-                    <label class="payment-option">
-                        <input type="radio" name="payment" value="1" checked>
-                        <span>💰 UPI Payment</span>
-                    </label>
-                    <label class="payment-option">
-                        <input type="radio" name="payment" value="2">
-                        <span>💳 Credit Card</span>
-                    </label>
-                    <label class="payment-option">
-                        <input type="radio" name="payment" value="3">
-                        <span>💵 Cash on Delivery (COD)</span>
-                    </label>
+                
+                <div class="mb-4">
+                    <label for="delivery-location" class="block text-gray-700 mb-2">Delivery Location:</label>
+                    <select id="delivery-location" class="w-full p-2 border rounded-lg">
+                        <option value="within">Within City</option>
+                        <option value="outside">Outside City</option>
+                    </select>
                 </div>
-
-                <!-- Delivery Options -->
-                <div class="delivery-option">
-                    <label>
-                        <input type="checkbox" id="within-city" checked>
-                        <span>📍 Delivery within city limits</span>
-                    </label>
-                </div>
-
-                <button class="checkout-btn" onclick="processCheckout()" disabled>
-                    🚀 Proceed to Checkout
+                
+                <button id="proceed-to-checkout" class="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    Proceed to Checkout
                 </button>
             </div>
-
-            <!-- Bill Section -->
-            <div class="section bill-section" id="bill-section" style="display: none;">
-                <h2>🧾 Final Bill</h2>
-                <div id="bill-details"></div>
+            
+            <!-- Checkout Section -->
+            <div id="checkout-section" class="hidden">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Checkout Summary</h2>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <div id="checkout-items" class="mb-4">
+                        <!-- Checkout items will be displayed here -->
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <div class="summary-item flex justify-between">
+                            <span>Subtotal:</span>
+                            <span>₹<span id="subtotal">0</span></span>
+                        </div>
+                        
+                        <div class="summary-item flex justify-between">
+                            <span>Discount:</span>
+                            <span id="discount-amount" class="text-green-600">-₹0</span>
+                        </div>
+                        
+                        <div class="summary-item flex justify-between">
+                            <span>Shipping:</span>
+                            <span id="shipping-charge">₹0</span>
+                        </div>
+                        
+                        <div class="summary-item flex justify-between font-bold text-lg">
+                            <span>Total:</span>
+                            <span>₹<span id="total-amount">0</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="font-semibold text-gray-700 mb-2">Select Payment Method:</h3>
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="payment-option" data-method="upi">
+                            <div class="flex items-center">
+                                <i class="fas fa-mobile-alt text-purple-500 text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">UPI Payment</div>
+                                    <div class="text-sm text-gray-600">Pay using UPI apps</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-option" data-method="credit">
+                            <div class="flex items-center">
+                                <i class="far fa-credit-card text-purple-500 text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">Credit Card</div>
+                                    <div class="text-sm text-gray-600">Visa, MasterCard, etc.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-option" data-method="cod">
+                            <div class="flex items-center">
+                                <i class="fas fa-money-bill-wave text-purple-500 text-xl mr-3"></i>
+                                <div>
+                                    <div class="font-semibold">Cash on Delivery</div>
+                                    <div class="text-sm text-gray-600">Pay when item is delivered</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="cashback-message" class="mb-4 text-center p-2 rounded-lg">
+                    <!-- Cashback eligibility message will appear here -->
+                </div>
+                
+                <div id="cod-restriction" class="hidden bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                        <span class="text-yellow-700">COD is only available for orders ≤ ₹3000 and within city delivery</span>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <button id="back-to-cart" class="bg-gray-500 text-white py-2 px-4 rounded-lg flex-1 hover:bg-gray-600 transition-colors">
+                        Back to Cart
+                    </button>
+                    <button id="place-order" class="bg-purple-600 text-white py-2 px-4 rounded-lg flex-1 hover:bg-purple-700 transition-colors">
+                        Place Order
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Order Confirmation -->
+            <div id="order-confirmation" class="hidden text-center">
+                <div class="mb-6">
+                    <i class="fas fa-check-circle text-green-500 text-5xl mb-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">Order Placed Successfully!</h2>
+                    <p class="text-gray-600 mt-2">Thank you for shopping with us</p>
+                </div>
+                
+                <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left">
+                    <h3 class="font-semibold mb-2">Order Summary:</h3>
+                    <div class="space-y-1 text-sm">
+                        <div class="flex justify-between">
+                            <span>Items:</span>
+                            <span>₹<span id="confirm-subtotal">0</span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Discount:</span>
+                            <span class="text-green-600">-₹<span id="confirm-discount">0</span></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Shipping:</span>
+                            <span>₹<span id="confirm-shipping">0</span></span>
+                        </div>
+                        <div class="flex justify-between font-semibold">
+                            <span>Total:</span>
+                            <span>₹<span id="confirm-total">0</span></span>
+                        </div>
+                        <div class="flex justify-between mt-2">
+                            <span>Payment Method:</span>
+                            <span id="confirm-payment" class="font-semibold"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Cashback:</span>
+                            <span id="confirm-cashback" class="font-semibold"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="shop-again" class="bg-purple-600 text-white py-2 px-6 rounded-lg hover:bg-purple-700 transition-colors">
+                    Shop Again
+                </button>
             </div>
         </div>
     </div>
 
     <script>
-        class ShoppingCart {
-            constructor() {
-                this.items = [];
-                this.cartTotal = 0;
-                this.shippingCharge = 0;
-                this.discountPercent = 0;
-                this.discountAmount = 0;
-                this.finalAmount = 0;
-                this.paymentMethod = '';
-                this.isWithinCity = true;
-            }
+        // Shopping cart data
+        let cart = [];
+        let selectedPaymentMethod = null;
+        let deliveryLocation = 'within';
 
-            addItem(name, price, quantity) {
-                // Check if item already exists
-                const existingItem = this.items.find(item => item.name === name);
-                if (existingItem) {
-                    existingItem.quantity += quantity;
-                } else {
-                    this.items.push({ name, price, quantity });
-                }
-                this.updateCart();
-            }
+        // DOM elements
+        const productSelection = document.getElementById('product-selection');
+        const checkoutSection = document.getElementById('checkout-section');
+        const orderConfirmation = document.getElementById('order-confirmation');
+        const cartItems = document.getElementById('cart-items');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const checkoutItems = document.getElementById('checkout-items');
+        const proceedButton = document.getElementById('proceed-to-checkout');
+        const deliverySelect = document.getElementById('delivery-location');
+        const codRestriction = document.getElementById('cod-restriction');
 
-            removeItem(index) {
-                this.items.splice(index, 1);
-                this.updateCart();
-            }
-
-            calculateCartTotal() {
-                this.cartTotal = this.items.reduce((total, item) => {
-                    return total + (item.price * item.quantity);
-                }, 0);
-            }
-
-            updateCart() {
-                this.calculateCartTotal();
-                this.displayCart();
-                this.updateCheckoutButton();
-            }
-
-            displayCart() {
-                const cartContainer = document.getElementById('cart-container');
-                
-                // 1. if - Check if cart has at least 1 item
-                if (this.items.length >= 1) {
-                    let cartHTML = '';
-                    this.items.forEach((item, index) => {
-                        cartHTML += `
-                            <div class="cart-item">
-                                <div>
-                                    <div style="font-weight: bold;">${item.name}</div>
-                                    <div style="color: #e74c3c;">₹${item.price} × ${item.quantity} = ₹${item.price * item.quantity}</div>
-                                </div>
-                                <button class="remove-btn" onclick="cart.removeItem(${index})">Remove</button>
-                            </div>
-                        `;
-                    });
-                    
-                    cartHTML += `
-                        <div style="text-align: center; margin-top: 15px; font-weight: bold; font-size: 1.2rem; color: #2c3e50;">
-                            Cart Total: ₹${this.cartTotal}
-                        </div>
-                    `;
-                    
-                    cartContainer.innerHTML = cartHTML;
-                } else {
-                    cartContainer.innerHTML = '<div class="empty-cart">Your cart is empty. Add some products!</div>';
-                }
-            }
-
-            updateCheckoutButton() {
-                const checkoutBtn = document.querySelector('.checkout-btn');
-                if (this.items.length >= 1) {
-                    checkoutBtn.disabled = false;
-                    checkoutBtn.textContent = '🚀 Proceed to Checkout';
-                } else {
-                    checkoutBtn.disabled = true;
-                    checkoutBtn.textContent = 'Add items to checkout';
-                }
-            }
-
-            // 2. if...else - Calculate shipping charges
-            calculateShipping() {
-                if (this.cartTotal >= 500) {
-                    this.shippingCharge = 0;
-                    return "✅ Free shipping (Cart total ≥ ₹500)";
-                } else {
-                    this.shippingCharge = 50;
-                    return "📦 Shipping charge: ₹50 (Cart total < ₹500)";
-                }
-            }
-
-            // 3. if...else if...else - Apply discount based on cart total
-            applyDiscount() {
-                if (this.cartTotal >= 2000) {
-                    this.discountPercent = 20;
-                    return "🎉 20% discount applied! (Cart total ≥ ₹2000)";
-                } else if (this.cartTotal >= 1000) {
-                    this.discountPercent = 10;
-                    return "🎊 10% discount applied! (Cart total ≥ ₹1000)";
-                } else if (this.cartTotal >= 500) {
-                    this.discountPercent = 5;
-                    return "✨ 5% discount applied! (Cart total ≥ ₹500)";
-                } else {
-                    this.discountPercent = 0;
-                    return "No discount available (Cart total < ₹500)";
-                }
-            }
-
-            // 4. switch - Payment method selection
-            getPaymentMethod(choice) {
-                switch (parseInt(choice)) {
-                    case 1:
-                        this.paymentMethod = 'UPI';
-                        return "💰 UPI Payment";
-                    case 2:
-                        this.paymentMethod = 'Credit Card';
-                        return "💳 Credit Card";
-                    case 3:
-                        this.paymentMethod = 'COD';
-                        return "💵 Cash on Delivery";
-                    default:
-                        this.paymentMethod = 'UPI';
-                        return "💰 UPI Payment (Default)";
-                }
-            }
-
-            // 5. ternary - Check cashback eligibility
-            checkCashbackEligibility() {
-                const isDigitalPayment = (this.paymentMethod === 'UPI' || this.paymentMethod === 'Credit Card');
-                return isDigitalPayment ? "✅ Eligible for cashback" : "❌ Not eligible for cashback";
-            }
-
-            // 6. logical operators - COD eligibility check
-            checkCODEligibility() {
-                this.finalAmount = this.cartTotal - this.discountAmount + this.shippingCharge;
-                
-                // Using logical AND operator
-                const codEligible = (this.finalAmount <= 3000) && (this.isWithinCity);
-                
-                if (this.paymentMethod === 'COD') {
-                    if (codEligible) {
-                        return {
-                            eligible: true,
-                            message: "✅ COD is available (Amount ≤ ₹3000 AND delivery within city)"
-                        };
-                    } else {
-                        let reasons = [];
-                        if (this.finalAmount > 3000) {
-                            reasons.push("Amount exceeds ₹3000");
-                        }
-                        if (!this.isWithinCity) {
-                            reasons.push("Delivery outside city limits");
-                        }
-                        
-                        // Auto-switch to UPI if COD not eligible
-                        this.paymentMethod = 'UPI';
-                        document.querySelector('input[name="payment"][value="1"]').checked = true;
-                        
-                        return {
-                            eligible: false,
-                            message: `❌ COD not available. Reasons: ${reasons.join(', ')}. Payment method changed to UPI.`
-                        };
-                    }
-                }
-                return { eligible: true, message: "" };
-            }
-
-            processCheckout() {
-                // Get payment method
-                const paymentChoice = document.querySelector('input[name="payment"]:checked').value;
-                this.isWithinCity = document.getElementById('within-city').checked;
-                
-                // Calculate all values
-                this.calculateCartTotal();
-                const shippingMessage = this.calculateShipping();
-                const discountMessage = this.applyDiscount();
-                this.discountAmount = (this.cartTotal * this.discountPercent) / 100;
-                const paymentMessage = this.getPaymentMethod(paymentChoice);
-                const codCheck = this.checkCODEligibility();
-                const cashbackMessage = this.checkCashbackEligibility();
-                
-                // Display bill
-                this.displayBill(shippingMessage, discountMessage, paymentMessage, codCheck, cashbackMessage);
-            }
-
-            displayBill(shippingMessage, discountMessage, paymentMessage, codCheck, cashbackMessage) {
-                const billSection = document.getElementById('bill-section');
-                const billDetails = document.getElementById('bill-details');
-                
-                let statusMessages = `
-                    <div class="status-message success">${shippingMessage}</div>
-                    <div class="status-message success">${discountMessage}</div>
-                    <div class="status-message ${codCheck.eligible ? 'success' : 'warning'}">${codCheck.message}</div>
-                    <div class="status-message success">Payment Method: ${paymentMessage}</div>
-                    <div class="status-message ${this.paymentMethod !== 'COD' ? 'success' : 'warning'}">${cashbackMessage}</div>
-                `;
-
-                let billHTML = `
-                    ${statusMessages}
-                    <div style="margin-top: 20px;">
-                        <div class="bill-row">
-                            <span>Cart Total:</span>
-                            <span>₹${this.cartTotal}</span>
-                        </div>
-                        ${this.discountAmount > 0 ? `
-                            <div class="bill-row">
-                                <span>Discount (${this.discountPercent}%):</span>
-                                <span style="color: #27ae60;">-₹${this.discountAmount}</span>
-                            </div>
-                        ` : ''}
-                        <div class="bill-row">
-                            <span>Shipping Charges:</span>
-                            <span>₹${this.shippingCharge}</span>
-                        </div>
-                        <div class="bill-row total">
-                            <span>Final Amount:</span>
-                            <span>₹${this.finalAmount}</span>
-                        </div>
-                        <div style="text-align: center; margin-top: 20px; padding: 20px; background: rgba(52, 152, 219, 0.1); border-radius: 10px;">
-                            <h3 style="color: #3498db; margin-bottom: 10px;">🎉 Order Confirmed!</h3>
-                            <p style="color: #2c3e50;">Thank you for shopping with ShopSmart!</p>
-                            <p style="color: #7f8c8d; margin-top: 10px;">Payment Method: ${this.paymentMethod}</p>
-                        </div>
-                    </div>
-                `;
-
-                billDetails.innerHTML = billHTML;
-                billSection.style.display = 'block';
-                billSection.scrollIntoView({ behavior: 'smooth' });
-            }
+        // Initialize the application
+        function init() {
+            updateCartDisplay();
+            setupEventListeners();
         }
 
-        // Initialize cart
-        const cart = new ShoppingCart();
+        // Set up event listeners
+        function setupEventListeners() {
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const product = e.target.closest('.add-to-cart').dataset.product;
+                    const price = parseInt(e.target.closest('.add-to-cart').dataset.price);
+                    addToCart(product, price);
+                });
+            });
 
-        // Utility functions
-        function updateQuantity(productId, change) {
-            const input = document.getElementById(productId + '-qty');
-            let currentValue = parseInt(input.value);
-            currentValue = Math.max(1, currentValue + change);
-            input.value = currentValue;
+            // Proceed to checkout
+            proceedButton.addEventListener('click', proceedToCheckout);
+
+            // Back to cart
+            document.getElementById('back-to-cart').addEventListener('click', backToCart);
+
+            // Place order
+            document.getElementById('place-order').addEventListener('click', placeOrder);
+
+            // Shop again
+            document.getElementById('shop-again').addEventListener('click', shopAgain);
+
+            // Payment method selection
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    selectPaymentMethod(e.currentTarget.dataset.method);
+                });
+            });
+
+            // Delivery location change
+            deliverySelect.addEventListener('change', (e) => {
+                deliveryLocation = e.target.value;
+                updateCheckoutSummary();
+                checkCODRestrictions();
+            });
         }
 
-        function addToCart(name, price, qtyInputId) {
-            const quantity = parseInt(document.getElementById(qtyInputId).value);
-            cart.addItem(name, price, quantity);
+        // Add product to cart
+        function addToCart(product, price) {
+            // Check if product already in cart
+            const existingItem = cart.find(item => item.product === product);
             
-            // Reset quantity to 1
-            document.getElementById(qtyInputId).value = 1;
-            
-            // Show success message
-            showNotification(`${name} added to cart!`, 'success');
-        }
-
-        function processCheckout() {
-            // 1. if - Check if cart has items before proceeding
-            if (cart.items.length >= 1) {
-                cart.processCheckout();
+            if (existingItem) {
+                existingItem.quantity += 1;
             } else {
-                showNotification('Please add items to cart before checkout!', 'error');
+                cart.push({
+                    product: product,
+                    price: price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartDisplay();
+            
+            // Show animation on the added product button
+            const button = document.querySelector(`.add-to-cart[data-product="${product}"]`);
+            button.classList.add('pulse');
+            setTimeout(() => {
+                button.classList.remove('pulse');
+            }, 600);
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            // Requirement 1: Check if cart has at least 1 item
+            if (cart.length > 0) {
+                emptyCartMessage.style.display = 'none';
+                cartItems.innerHTML = '';
+                
+                cart.forEach(item => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'flex justify-between py-1';
+                    itemElement.innerHTML = `
+                        <span>${item.product} (x${item.quantity})</span>
+                        <span>₹${item.price * item.quantity}</span>
+                    `;
+                    cartItems.appendChild(itemElement);
+                });
+                
+                proceedButton.disabled = false;
+            } else {
+                emptyCartMessage.style.display = 'block';
+                cartItems.innerHTML = '';
+                proceedButton.disabled = true;
             }
         }
 
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `status-message ${type}`;
-            notification.textContent = message;
-            notification.style.position = 'fixed';
-            notification.style.top = '20px';
-            notification.style.right = '20px';
-            notification.style.zIndex = '1000';
-            notification.style.minWidth = '300px';
+        // Proceed to checkout
+        function proceedToCheckout() {
+            // Requirement 1: if - Check if cart has at least 1 item
+            if (cart.length === 0) {
+                alert('Your cart is empty. Please add items before proceeding to checkout.');
+                return;
+            }
             
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+            productSelection.classList.add('hidden');
+            checkoutSection.classList.remove('hidden');
+            updateCheckoutSummary();
         }
 
-        // Initialize with sample items (for demonstration)
-        document.addEventListener('DOMContentLoaded', function() {
-            // You can add sample items here if needed
-            console.log('Shopping Cart System Loaded!');
-            console.log('All conditional statements implemented:');
-            console.log('1. if - Cart validation');
-            console.log('2. if...else - Shipping calculation');
-            console.log('3. if...else if...else - Discount tiers');
-            console.log('4. switch - Payment method selection');
-            console.log('5. ternary - Cashback eligibility');
-            console.log('6. logical operators - COD eligibility (amount <= 3000 AND within city)');
-        });
+        // Update checkout summary
+        function updateCheckoutSummary() {
+            // Calculate subtotal
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString();
+            
+            // Requirement 3: if...else if...else - Apply discounts
+            let discountRate = 0;
+            if (subtotal >= 2000) {
+                discountRate = 0.2; // 20%
+            } else if (subtotal >= 1000) {
+                discountRate = 0.1; // 10%
+            } else if (subtotal >= 500) {
+                discountRate = 0.05; // 5%
+            } else {
+                discountRate = 0; // No discount
+            }
+            
+            const discountAmount = Math.round(subtotal * discountRate);
+            document.getElementById('discount-amount').textContent = `-₹${discountAmount.toLocaleString()}`;
+            
+            // Requirement 2: if...else - Shipping charges
+            let shippingCharge = 0;
+            if (subtotal >= 500) {
+                shippingCharge = 0; // Free shipping
+            } else {
+                shippingCharge = 50; // ₹50 shipping charge
+            }
+            document.getElementById('shipping-charge').textContent = `₹${shippingCharge}`;
+            
+            // Calculate total
+            const total = subtotal - discountAmount + shippingCharge;
+            document.getElementById('total-amount').textContent = total.toLocaleString();
+            
+            // Update checkout items
+            checkoutItems.innerHTML = '';
+            cart.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'flex justify-between py-1';
+                itemElement.innerHTML = `
+                    <span>${item.product} (x${item.quantity})</span>
+                    <span>₹${item.price * item.quantity}</span>
+                `;
+                checkoutItems.appendChild(itemElement);
+            });
+            
+            // Show discount badge if applicable
+            if (discountRate > 0) {
+                const discountBadge = document.createElement('div');
+                discountBadge.className = 'discount-badge text-center mt-2';
+                discountBadge.textContent = `You saved ₹${discountAmount} (${discountRate * 100}% discount)!`;
+                checkoutItems.appendChild(discountBadge);
+            }
+            
+            // Update cashback message based on selected payment
+            if (selectedPaymentMethod) {
+                updateCashbackMessage();
+            }
+            
+            // Check COD restrictions
+            checkCODRestrictions();
+        }
+
+        // Select payment method
+        function selectPaymentMethod(method) {
+            selectedPaymentMethod = method;
+            
+            // Update UI
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            document.querySelector(`.payment-option[data-method="${method}"]`).classList.add('selected');
+            
+            // Requirement 4: switch - Choose payment method
+            let paymentText = '';
+            switch(method) {
+                case 'upi':
+                    paymentText = 'UPI';
+                    break;
+                case 'credit':
+                    paymentText = 'Credit Card';
+                    break;
+                case 'cod':
+                    paymentText = 'Cash on Delivery';
+                    break;
+                default:
+                    paymentText = 'Unknown';
+            }
+            
+            // Update cashback message
+            updateCashbackMessage();
+            
+            // Check COD restrictions
+            checkCODRestrictions();
+        }
+
+        // Requirement 5: ternary - Show cashback eligibility
+        function updateCashbackMessage() {
+            const cashbackMessage = document.getElementById('cashback-message');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Digital payments (UPI, Credit Card) are eligible for cashback
+            const isDigitalPayment = selectedPaymentMethod === 'upi' || selectedPaymentMethod === 'credit';
+            
+            // Ternary operator to determine message
+            const message = isDigitalPayment 
+                ? '<span class="cashback-eligible">✓ Eligible for 5% cashback on this order!</span>' 
+                : '<span class="cashback-not-eligible">❌ Not eligible for cashback</span>';
+            
+            cashbackMessage.innerHTML = message;
+        }
+
+        // Requirement 6: logical operators - Check COD restrictions
+        function checkCODRestrictions() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const placeOrderButton = document.getElementById('place-order');
+            
+            // COD is only available if amount ≤ ₹3000 AND delivery is within the city
+            if (selectedPaymentMethod === 'cod' && (subtotal > 3000 || deliveryLocation !== 'within')) {
+                codRestriction.classList.remove('hidden');
+                placeOrderButton.disabled = true;
+                placeOrderButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                codRestriction.classList.add('hidden');
+                placeOrderButton.disabled = false;
+                placeOrderButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // Back to cart
+        function backToCart() {
+            checkoutSection.classList.add('hidden');
+            productSelection.classList.remove('hidden');
+        }
+
+        // Place order
+        function placeOrder() {
+            // Final validation
+            if (!selectedPaymentMethod) {
+                alert('Please select a payment method.');
+                return;
+            }
+            
+            // Check COD restrictions one more time
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            if (selectedPaymentMethod === 'cod' && (subtotal > 3000 || deliveryLocation !== 'within')) {
+                alert('COD is not available for this order. Please select a different payment method.');
+                return;
+            }
+            
+            // Calculate final amounts
+            const subtotalAmount = subtotal;
+            
+            let discountRate = 0;
+            if (subtotal >= 2000) {
+                discountRate = 0.2;
+            } else if (subtotal >= 1000) {
+                discountRate = 0.1;
+            } else if (subtotal >= 500) {
+                discountRate = 0.05;
+            }
+            
+            const discountAmount = Math.round(subtotal * discountRate);
+            const shippingCharge = subtotal >= 500 ? 0 : 50;
+            const totalAmount = subtotal - discountAmount + shippingCharge;
+            
+            // Update confirmation screen
+            document.getElementById('confirm-subtotal').textContent = subtotalAmount.toLocaleString();
+            document.getElementById('confirm-discount').textContent = discountAmount.toLocaleString();
+            document.getElementById('confirm-shipping').textContent = shippingCharge;
+            document.getElementById('confirm-total').textContent = totalAmount.toLocaleString();
+            
+            // Set payment method text
+            let paymentText = '';
+            switch(selectedPaymentMethod) {
+                case 'upi':
+                    paymentText = 'UPI';
+                    break;
+                case 'credit':
+                    paymentText = 'Credit Card';
+                    break;
+                case 'cod':
+                    paymentText = 'Cash on Delivery';
+                    break;
+            }
+            document.getElementById('confirm-payment').textContent = paymentText;
+            
+            // Set cashback eligibility
+            const isDigitalPayment = selectedPaymentMethod === 'upi' || selectedPaymentMethod === 'credit';
+            document.getElementById('confirm-cashback').textContent = isDigitalPayment ? 'Eligible (5%)' : 'Not Eligible';
+            document.getElementById('confirm-cashback').className = isDigitalPayment ? 'cashback-eligible' : 'cashback-not-eligible';
+            
+            // Show confirmation
+            checkoutSection.classList.add('hidden');
+            orderConfirmation.classList.remove('hidden');
+        }
+
+        // Shop again
+        function shopAgain() {
+            // Reset cart and selections
+            cart = [];
+            selectedPaymentMethod = null;
+            deliveryLocation = 'within';
+            deliverySelect.value = 'within';
+            
+            // Reset UI
+            orderConfirmation.classList.add('hidden');
+            productSelection.classList.remove('hidden');
+            updateCartDisplay();
+            
+            // Reset payment selection
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            codRestriction.classList.add('hidden');
+        }
+
+        // Initialize the application
+        init();
     </script>
 </body>
 </html>
